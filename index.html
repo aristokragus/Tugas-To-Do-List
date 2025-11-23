@@ -3,9 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>To Do List</title>
+    <link rel="stylesheet" href="style.css">
+
 </head>
 <body>
-    
+    <div class="container">
+
+        <div class="header"> To Do List</div>
+
+        <div class="input-group">
+            <input type="text" id="taskInput" placeholder="Tambah Tugas">
+            <button id="addTaskBtn" class="add-btn">
+                <i class=""></i>
+            </button>
+        </div>
+
+        <div class="task-container">
+            <div class="title-section"> test </div>
+            <ul id="activeList"></ul>
+        </div>
+
+        <div class="completed-toggle" onclick="toggleCompletedSection()">
+            <span>test</span>
+            <span class="completed-count" id="countDisplay">0</span>
+            <i class="" id="toggleIcon"></i>
+        </div>
+
+        <div class="completed-list-container" id="completedContainer">
+            <ul id="completedList"></ul>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
