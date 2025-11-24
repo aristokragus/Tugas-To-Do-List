@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>To Do List</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 </head>
 <body>
@@ -15,7 +16,7 @@
         <div class="input-group">
             <input type="text" id="taskInput" placeholder="Tambah Tugas">
             <button id="addTaskBtn" class="add-btn">
-                <i class=""></i>
+                <i class="fas fa-plus"></i>
             </button>
         </div>
 
@@ -27,7 +28,7 @@
         <div class="completed-toggle" onclick="toggleCompletedSection()">
             <span>Completed</span>
             <span class="completed-count" id="countDisplay">0</span>
-            <i class="" id="toggleIcon"></i>
+            <i class="fas fa-chevron-right toggle-icon" id="toggleIcon"></i>
         </div>
 
         <div class="completed-list-container" id="completedContainer">

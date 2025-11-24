@@ -11,7 +11,7 @@ body {
     justify-content: center;
     align-items: flex-start;
 
-    background: linear-gradient(180deg, #6b63ff 0%, #4facfe 100%);
+    background: linear-gradient(180deg, #1A2A80 0%, #7A85C1 100%);
     min-height: 100vh;
 }
 
@@ -23,7 +23,7 @@ body {
 }
 
 .header {
-    background: linear-gradient(to right, #0f0c29, #302b63, #24243e);
+    background: linear-gradient(to right, #3B38A0, #3B38A0, #3B38A0);
     color: white;
     padding: 20px;
     text-align: center;
@@ -57,7 +57,7 @@ body {
     width: 60px;
     border: none;
     border-radius: 15px;
-    background: linear-gradient(to right #00b4db, #0083b0);
+    background: linear-gradient(to right, #1A2A80, #0083b0);
     color: white;
     font-size: 1.2rem;
     cursor: pointer;
@@ -111,7 +111,7 @@ li:hover {background: rgba(255,255,255,0.05); padding-left: 8px; border-radius: 
 }
 
 .completed-toggle {
-    background: linear-gradient(to right, #2b1055, #7597de);
+    background: linear-gradient(to right, #1A2A80, #7A85C1);
     color: white;
     padding: 15px 20px;
     border-radius: 15px;
