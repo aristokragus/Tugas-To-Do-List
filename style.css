@@ -1,0 +1,106 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    padding-top: 50px ;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+
+    background: linear-gradient(180deg, #6b63ff 0%, #4facfe 100%);
+    min-height: 100vh;
+}
+
+.container {
+    width: 800px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;   
+}
+
+.header {
+    background: linear-gradient(to right, #0f0c29, #302b63, #24243e);
+    color: white;
+    padding: 20px;
+    text-align: center;
+    border-radius: 15px;
+    font-size: 1.5rem;
+    font-weight: 600;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    letter-spacing: 1px;
+}
+
+.input-group {
+    width: 100%;
+    display: flex;
+    gap: 10px;
+}
+
+#taskInput {
+    flex-grow: 1;
+    padding: 15px 20px;
+    border-radius: 15px;
+    border: none;
+    background: rgba(0,0,0,0.6);
+    color: white;
+    font-size: 1rem;
+    outline: none;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+#taskInput::placeholder {color: rgba(255, 255, 255, 0.6);}
+
+.add-btn {
+    width: 60px;
+    border: none;
+    border-radius: 15px;
+    background: linear-gradient(to right #00b4db, #0083b0);
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    transition: transform 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.add-btn:hover {transform: scale(1.0);}
+.add-btn:active {transform: scale(0.95);}
+
+.task-container {
+    background: linear-gradient(to bottom #000000e6, #1a1a2e);
+    border-radius: 15px;
+    padding: 10px 0;
+    min-height: 300px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    overflow: hidden;
+}
+
+.title-section {
+    color: white;
+    text-align: center;
+    padding: 10px;
+    font-size: 1.2rem;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    margin-bottom: 5px;
+}
+
+.completed-toggle {
+    background: linear-gradient(to right, #2b1055, #7597de);
+    color: white;
+    padding: 15px 20px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    cursor: pointer;
+    user-select: none;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    margin-top: 10px;
+    transition: transform 0.2s;
+}
+.completed-toggle:active {transform: scale(1.0);}
