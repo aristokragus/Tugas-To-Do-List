@@ -89,6 +89,27 @@ body {
     margin-bottom: 5px;
 }
 
+ul {list-style: none; padding: 0 15px;}
+
+li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    color: white;
+    transition: all 0.3s ease;
+}
+li:hover {background: rgba(255,255,255,0.05); padding-left: 8px; border-radius: 5px;;}
+
+.task-text {
+    flex-grow: 1;
+    font-size: 0.95rem;
+    padding-right: 10px;
+    word-break: break-word;
+    cursor: default;
+}
+
 .completed-toggle {
     background: linear-gradient(to right, #2b1055, #7597de);
     color: white;
