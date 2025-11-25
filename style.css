@@ -178,6 +178,16 @@ li.completed .task-text {
 .toggle-icon { transition: transform 0.3s; }
 .toggle-icon.rotate { transform: rotate(90deg); }
 
+.completed-list-container {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease-out;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 0 0 15px 15px;
+    margin-top: -10px;
+    padding-top: 10px;
+}
+.completed-list-container.show { max-height: 500px; }
 
 .edit-input {
     flex-grow: 1;           
@@ -194,4 +204,15 @@ li.completed .task-text {
 
 .edit-input {
     caret-color: #ffd700; 
+}
+
+.footer {
+    position: fixed;
+    bottom: 20px;
+    left: 0;
+    width: 100%; 
+    text-align: center; 
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.8rem;
+    pointer-events: none;
 }

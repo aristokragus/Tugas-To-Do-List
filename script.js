@@ -76,6 +76,66 @@ function toggleComplete(element) {
     }, 300);
 }
 
+
+function toggleCompleteSection() {
+    completedContainer.classList.toggle('show');
+    toggleIcon.classList.toggle('rotate');
+}
+
+function saveTask(li, input) {
+    const newText = input.value;
+
+    const finalText = newText.trim() === "" ? "Tugas Kosong" : newText;
+
+    const span = document.createElement('span');
+    span.className = 'task-text';
+    span.innerText = finalText;
+
+    try {
+        li.replaceChild(span, input);
+    } catch (e) {
+    }
+}
+
+function deleteTask(element) {
+    if(confirm("Hapus tugas?")){
+        const li = element.closest('li');
+        li.style.opacity = '0';
+        li.style.transform = 'scale(0.9)';
+        setTimeout(() => {
+            li.remove();
+            updateCount();
+        }, 300);
+    }
+}
+
+function editTask(element) {
+    const li = element.closest('li');
+    const spanText = li.querySelector('.task-text');
+
+    if (li.querySelector('.edit-input')) return;
+
+    const currentText = spanText.innerText;
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.value = currentText;
+    input.className = 'edit-input'; 
+
+    li.replaceChild(input, spanText);
+    input.focus();
+
+    
+    input.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            saveTask(li, input);
+        }
+    });
+
+    input.addEventListener('blur', function() {
+        saveTask(li, input);
+    });
+}
+
 function togglePin(element) {
     element.classList.toggle('active');
     const li = element.closest('li');
@@ -91,21 +151,9 @@ function togglePin(element) {
     }
 }
 
-function toggleCompleteSection() {
+function toggleCompletedSection() {
     completedContainer.classList.toggle('show');
     toggleIcon.classList.toggle('rotate');
-}
-
-function deleteTask(element) {
-    if(confirm("Hapus tugas?")){
-        const li = element.closest('li');
-        li.style.opacity = '0';
-        li.style.transform = 'scale(0.9)';
-        setTimeout(() => {
-            li.remove();
-            updateCount();
-        }, 300);
-    }
 }
 
 function updateCount() {
