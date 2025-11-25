@@ -2,6 +2,8 @@ const taskInput = document.getElementById('taskInput');
 const addTaskBtn = document.getElementById('addTaskBtn');
 const activeList = document.getElementById('activeList');
 const completedList = document.getElementById('completedList');
+const completedContainer = document.getElementById('completedContainer')
+const toggleIcon = document.getElementById('toggleIcon')
 const countDisplay = document.getElementById('countDisplay');
 
 
@@ -12,24 +14,15 @@ function clickAdd() {
     }
 }
 
-function AddTask() {
-    const text = taskInput.value.trim();
-    if (text !== "") {
-        createTaskElement(text);
-        taskInput.value = ""; 
-        taskInput.focus();
-    }
-}
-
 taskInput.addEventListener('keypress', function (e) {
-    if (e.key === 'Enter') AddTask();
+    if (e.key === 'Enter') clickAdd();
 });
 
 addTaskBtn.addEventListener('click', function () {
-    AddTask();
+    clickAdd();
 });
 
-function createTaskElement(text) {
+function addTask(text) {
     const li = document.createElement('li');
     li.innerHTML = `
         <span class="task-text">${text}</span>
@@ -37,7 +30,10 @@ function createTaskElement(text) {
             ${generateButtons('active')}
         </div>
     `;
+
+    li.style.opacity = '0';
     activeList.appendChild(li);
+    setTimeout(() => li.style.opacity = '1', 10);
 }
 
 function generateButtons(status) {
@@ -56,30 +52,35 @@ function generateButtons(status) {
     }
 }
 
-function deleteTask(element) {
-    if(confirm("Hapus tugas?")){
-        element.closest('li').remove();
-    }
-}
-
 function toggleComplete(element) {
     const li = element.closest('li');
+    const actionDiv = li.querySelector('.actions');
+    
     li.classList.toggle('completed');
     
-    if (li.classList.contains('completed')) {
-        completedList.prepend(li);
-        li.querySelector('.actions').innerHTML = generateButtons('completed');
-    } else {
-        activeList.prepend(li);
-        li.querySelector('.actions').innerHTML = generateButtons('active');
-    }
+    li.style.opacity = '0';
+    li.style.transform = 'translateX(20px)';
+    
+    setTimeout(() => {
+        if (li.classList.contains('completed')) {
+            completedList.prepend(li);
+            actionDiv.innerHTML = generateButtons('completed'); 
+        } else {
+            activeList.prepend(li);
+            actionDiv.innerHTML = generateButtons('active');
+        }
+
+        li.style.opacity = '1';
+        li.style.transform = 'translateX(0)';
+        updateCount();
+    }, 300);
 }
 
 function togglePin(element) {
     element.classList.toggle('active');
     const li = element.closest('li');
     const parentList = li.parentElement;
-
+    
     if (element.classList.contains('active')) {
         li.style.transition = 'opacity 0.3s';
         li.style.opacity = '0.4';
@@ -93,4 +94,20 @@ function togglePin(element) {
 function toggleCompleteSection() {
     completedContainer.classList.toggle('show');
     toggleIcon.classList.toggle('rotate');
+}
+
+function deleteTask(element) {
+    if(confirm("Hapus tugas?")){
+        const li = element.closest('li');
+        li.style.opacity = '0';
+        li.style.transform = 'scale(0.9)';
+        setTimeout(() => {
+            li.remove();
+            updateCount();
+        }, 300);
+    }
+}
+
+function updateCount() {
+    countDisplay.innerText = completedList.children.length;
 }
