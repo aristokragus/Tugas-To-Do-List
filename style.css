@@ -10,8 +10,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: flex-start;
-
-    background: linear-gradient(180deg, #1A2A80 0%, #7A85C1 100%);
+    background: linear-gradient(180deg, #1A2A80 0%, #3B38A0 100%);
     min-height: 100vh;
 }
 
@@ -44,12 +43,15 @@ body {
     flex-grow: 1;
     padding: 15px 20px;
     border-radius: 15px;
-    border: none;
-    background: rgba(0,0,0,0.6);
+    border: 2px solid #3B38A0;
+    background: linear-gradient(to right, #000000e6, #1a1a2e);
     color: white;
     font-size: 1rem;
     outline: none;
     box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+#taskInput:focus {
+    border-color: #B2B0E8; 
 }
 #taskInput::placeholder {color: rgba(255, 255, 255, 0.6);}
 
@@ -57,7 +59,7 @@ body {
     width: 60px;
     border: none;
     border-radius: 15px;
-    background: linear-gradient(to right, #1A2A80, #0083b0);
+    background: linear-gradient(135deg, #7A85C1, #3B38A0);
     color: white;
     font-size: 1.2rem;
     cursor: pointer;
@@ -78,14 +80,15 @@ body {
     min-height: 300px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.3);
     overflow: hidden;
+    
 }
 
 .title-section {
-    color: white;
+    color: #B2B0E8;;
     text-align: center;
     padding: 10px;
     font-size: 1.2rem;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
+    border-bottom: 2px solid rgba(178, 176, 232, 0.1);
     margin-bottom: 5px;
 }
 
@@ -96,7 +99,7 @@ li {
     align-items: center;
     justify-content: space-between;
     padding: 12px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    border-bottom: 1px solid rgba(178, 176, 232, 0.2);
     color: white;
     transition: all 0.3s ease;
 }
