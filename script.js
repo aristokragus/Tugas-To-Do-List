@@ -5,7 +5,11 @@ const completedList = document.getElementById('completedList');
 const completedContainer = document.getElementById('completedContainer')
 const toggleIcon = document.getElementById('toggleIcon')
 const countDisplay = document.getElementById('countDisplay');
+const deleteModal = document.getElementById('deleteModal');
+const confirmBtn = document.getElementById('confirmBtn');
+const cancelBtn = document.getElementById('cancelBtn');
 
+let taskToDelete = null;
 
 function clickAdd() {
     if (taskInput.value.trim() !== "") {
@@ -98,15 +102,9 @@ function saveTask(li, input) {
 }
 
 function deleteTask(element) {
-    if(confirm("Hapus tugas?")){
-        const li = element.closest('li');
-        li.style.opacity = '0';
-        li.style.transform = 'scale(0.9)';
-        setTimeout(() => {
-            li.remove();
-            updateCount();
-        }, 300);
-    }
+    taskToDelete = element.closest('li');
+    
+    deleteModal.classList.add('active');
 }
 
 function editTask(element) {
@@ -159,3 +157,33 @@ function toggleCompletedSection() {
 function updateCount() {
     countDisplay.innerText = completedList.children.length;
 }
+
+confirmBtn.addEventListener('click', function() {
+    if (taskToDelete) {
+        
+        taskToDelete.style.opacity = '0';
+        taskToDelete.style.transform = 'scale(0.9)';
+        
+        setTimeout(() => {
+            taskToDelete.remove();
+            updateCount();
+            taskToDelete = null; 
+        }, 300);
+    }
+    closeModal();
+});
+
+cancelBtn.addEventListener('click', function() {
+    taskToDelete = null; 
+    closeModal();
+});
+
+function closeModal() {
+    deleteModal.classList.remove('active');
+}
+
+deleteModal.addEventListener('click', function(e) {
+    if (e.target === deleteModal) {
+        closeModal();
+    }
+});
