@@ -1,54 +1,372 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>To Do List</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Catatan Tugas • Agenda & Workspace</title>
+    <!-- Font Awesome 6 Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+    <!-- Google Fonts Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Main Style -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
+    <div class="workspace-layout">
+        <!-- ================= TOP COMMAND BAR ================= -->
+        <header class="top-command-bar">
+            <div class="brand-group">
+                <div class="brand-monogram">CT</div>
+                <div class="brand-meta">
+                    <h1 class="brand-title">Catatan Tugas</h1>
+                    <span class="brand-subtitle">Workspace Produktivitas</span>
+                </div>
+            </div>
 
-        <div class="header"> To Do List</div>
+            <!-- Command Search -->
+            <div class="command-search-wrap">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="globalSearchInput" placeholder="Cari agenda, sub-tugas, atau catatan... (Esc untuk batal)" autocomplete="off">
+                <span class="search-kbd-badge">/</span>
+            </div>
 
-        <div class="input-group">
-            <input type="text" id="taskInput" placeholder="Tambah Tugas">
-            <button id="addTaskBtn" class="add-btn">
-                <i class="fas fa-plus"></i>
-            </button>
-        </div>
+            <!-- Stats & Profile Quick Info -->
+            <div class="top-actions">
+                <div class="active-badge" id="topActiveCountBadge">
+                    <span class="status-pulse"></span>
+                    <span id="topActiveCountText">0 Tugas Aktif</span>
+                </div>
+                <!-- Mobile View Switcher (Visible only on <= 1024px) -->
+                <div class="mobile-pane-tabs" id="mobilePaneTabs">
+                    <button type="button" class="tab-btn active" id="tabBtnAgenda">
+                        <i class="fas fa-list-check"></i> Agenda
+                    </button>
+                    <button type="button" class="tab-btn" id="tabBtnCalendar">
+                        <i class="fas fa-calendar-alt"></i> Kalender & Detail
+                    </button>
+                </div>
+            </div>
+        </header>
 
-        <div class="task-container">
-            <div class="title-section"> Task </div>
-            <ul id="activeList"></ul>
-        </div>
+        <!-- ================= FILTER & CATEGORY CONTROL STRIP ================= -->
+        <nav class="filter-strip" aria-label="Filter tugas">
+            <div class="filter-pills" id="filterPills">
+                <button type="button" class="filter-pill active" data-filter="all">
+                    <i class="fas fa-layer-group"></i> Semua
+                </button>
+                <button type="button" class="filter-pill" data-filter="today">
+                    <i class="fas fa-sun"></i> Hari Ini
+                    <span class="pill-badge" id="badgeToday">0</span>
+                </button>
+                <button type="button" class="filter-pill" data-filter="important">
+                    <i class="fas fa-star"></i> Prioritas
+                    <span class="pill-badge" id="badgeImportant">0</span>
+                </button>
+                <button type="button" class="filter-pill" data-filter="upcoming">
+                    <i class="fas fa-clock"></i> Tenggat Dekat
+                    <span class="pill-badge" id="badgeUpcoming">0</span>
+                </button>
+                <button type="button" class="filter-pill" data-filter="completed">
+                    <i class="fas fa-circle-check"></i> Selesai
+                    <span class="pill-badge" id="badgeCompleted">0</span>
+                </button>
+            </div>
 
-        <div class="completed-toggle" onclick="toggleCompletedSection()">
-            <span>Completed</span>
-            <span class="completed-count" id="countDisplay">0</span>
-            <i class="fas fa-chevron-right toggle-icon" id="toggleIcon"></i>
-        </div>
+            <div class="strip-right-controls">
+                <!-- Category Filter -->
+                <div class="custom-select-wrap">
+                    <i class="fas fa-tag select-icon"></i>
+                    <select id="categoryFilterSelect" aria-label="Filter kategori">
+                        <option value="">Semua Kategori</option>
+                    </select>
+                </div>
 
-        <div class="completed-list-container" id="completedContainer">
-            <ul id="completedList" style="padding: 15px;"></ul>
-        </div>
+                <!-- Sort Filter -->
+                <div class="custom-select-wrap">
+                    <i class="fas fa-arrow-down-wide-short select-icon"></i>
+                    <select id="sortSelect" aria-label="Urutkan tugas">
+                        <option value="default">Prioritas & Terbaru</option>
+                        <option value="dueDate">Batas Waktu Terdekat</option>
+                        <option value="alpha">Abjad (A - Z)</option>
+                    </select>
+                </div>
+
+                <!-- Add Category Button -->
+                <button type="button" class="btn-subtle-add" id="btnAddCategoryBtn" title="Buat Kategori Baru">
+                    <i class="fas fa-plus"></i> Kategori
+                </button>
+            </div>
+        </nav>
+
+        <!-- ================= MAIN DUAL-PANE DESK ================= -->
+        <main class="dual-pane-desk">
+            <!-- PANE 1: AGENDA STREAM & COMPOSER (KIRI) -->
+            <section class="agenda-stream-pane" id="agendaStreamPane">
+                <!-- Fast Inline Composer -->
+                <div class="task-composer-card">
+                    <div class="composer-input-row">
+                        <span class="composer-plus-icon"><i class="fas fa-plus"></i></span>
+                        <input type="text" id="composerInput" placeholder="Tulis tugas baru lalu tekan Enter..." autocomplete="off">
+                        <button type="button" class="btn-composer-submit" id="btnComposerSubmit">
+                            <span>Tambah</span> <kbd>↵</kbd>
+                        </button>
+                    </div>
+                    <div class="composer-meta-row">
+                        <div class="composer-options">
+                            <label class="composer-chip">
+                                <i class="fas fa-calendar-day"></i>
+                                <input type="date" id="composerDueDate" title="Pilih batas tanggal">
+                            </label>
+                            <label class="composer-chip">
+                                <i class="fas fa-folder"></i>
+                                <select id="composerCategorySelect">
+                                    <option value="">Pilih Kategori...</option>
+                                </select>
+                            </label>
+                            <button type="button" class="composer-chip-btn" id="composerPriorityBtn">
+                                <i class="far fa-star"></i> Prioritas
+                            </button>
+                        </div>
+                        <span class="composer-hint">Shift + Enter untuk buat langsung</span>
+                    </div>
+                </div>
+
+                <!-- Active Agenda List -->
+                <div class="stream-scroll-container">
+                    <!-- Overdue Group (Conditional) -->
+                    <div class="agenda-group" id="groupOverdue" style="display: none;">
+                        <div class="group-header overdue-header">
+                            <i class="fas fa-triangle-exclamation"></i>
+                            <span>Terlewat Batas Waktu</span>
+                            <span class="group-count" id="countOverdue">0</span>
+                        </div>
+                        <ul class="task-stream-list" id="listOverdue"></ul>
+                    </div>
+
+                    <!-- Main Active Group -->
+                    <div class="agenda-group" id="groupActive">
+                        <div class="group-header">
+                            <i class="fas fa-bars-staggered"></i>
+                            <span id="activeGroupHeading">Agenda Aktif</span>
+                            <span class="group-count" id="countActive">0</span>
+                        </div>
+                        <ul class="task-stream-list" id="listActive"></ul>
+                    </div>
+
+                    <!-- Completed Group (Accordion) -->
+                    <div class="agenda-group" id="groupCompleted" style="display: none;">
+                        <button type="button" class="completed-accordion-btn" id="completedAccordionBtn">
+                            <i class="fas fa-chevron-right chevron-icon" id="completedChevron"></i>
+                            <span>Tugas Selesai</span>
+                            <span class="completed-counter" id="completedCountBadge">0</span>
+                        </button>
+                        <ul class="task-stream-list" id="listCompleted" style="display: none;"></ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PANE 2: INTERACTIVE CALENDAR & INSPECTOR (KANAN) -->
+            <section class="context-hub-pane" id="contextHubPane">
+                <!-- 1. Interactive Calendar Desk Widget -->
+                <div class="calendar-widget-card">
+                    <div class="cal-widget-header">
+                        <div class="cal-title-wrap">
+                            <i class="fas fa-calendar-days cal-header-icon"></i>
+                            <span class="cal-month-year" id="calMonthYear">Oktober 2026</span>
+                        </div>
+                        <div class="cal-controls">
+                            <button type="button" class="cal-nav-btn" id="calPrevMonth" title="Bulan Sebelumnya">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <button type="button" class="cal-today-pill" id="calTodayBtn">Hari Ini</button>
+                            <button type="button" class="cal-nav-btn" id="calNextMonth" title="Bulan Berikutnya">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Weekdays -->
+                    <div class="cal-weekdays-strip">
+                        <span>Min</span><span>Sen</span><span>Sel</span><span>Rab</span><span>Kam</span><span>Jum</span><span>Sab</span>
+                    </div>
+
+                    <!-- Days Grid -->
+                    <div class="cal-grid" id="calDaysGrid"></div>
+
+                    <!-- Calendar Active Filter Notice (if filtering by clicked date) -->
+                    <div class="cal-filter-banner" id="calFilterBanner" style="display: none;">
+                        <span><i class="fas fa-filter"></i> Memfilter tugas tanggal: <strong id="calBannerDate">11 Okt 2026</strong></span>
+                        <button type="button" class="btn-clear-cal-filter" id="btnClearCalFilter">Tampilkan Semua</button>
+                    </div>
+                </div>
+
+                <!-- 2. Task Inspector Desk (Synchronized when task is selected) -->
+                <div class="inspector-card" id="taskInspectorCard">
+                    <!-- Default State: No Task Selected -->
+                    <div class="inspector-empty" id="inspectorEmptyState">
+                        <div class="empty-icon-wrap">
+                            <i class="fas fa-mouse-pointer"></i>
+                        </div>
+                        <h3>Pilih Agenda di Kiri</h3>
+                        <p>Klik salah satu tugas untuk melihat checklist langkah, menyunting batas waktu, menambah catatan, atau menyinkronkan ke Google Calendar.</p>
+                        <div class="quick-summary-box" id="quickSummaryBox">
+                            <div class="summary-metric">
+                                <span class="metric-num" id="metricTotalTasks">0</span>
+                                <span class="metric-lbl">Total Agenda</span>
+                            </div>
+                            <div class="summary-metric">
+                                <span class="metric-num" id="metricDueToday">0</span>
+                                <span class="metric-lbl">Jadwal Hari Ini</span>
+                            </div>
+                            <div class="summary-metric">
+                                <span class="metric-num" id="metricCompletionRate">0%</span>
+                                <span class="metric-lbl">Selesai</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Active Inspector Content: Task Selected -->
+                    <div class="inspector-content" id="inspectorContent" style="display: none;">
+                        <!-- Inspector Header -->
+                        <div class="inspector-header">
+                            <div class="inspector-status-badge" id="inspectorStatusBadge">
+                                <button type="button" class="inspector-check-btn" id="inspectorCheckBtn">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                                <span id="inspectorStatusText">Belum Selesai</span>
+                            </div>
+                            <div class="inspector-header-actions">
+                                <button type="button" class="btn-star-inspector" id="inspectorStarBtn" title="Ubah status prioritas">
+                                    <i class="far fa-star"></i>
+                                </button>
+                                <button type="button" class="btn-close-inspector" id="btnCloseInspector" title="Tutup detail">
+                                    <i class="fas fa-xmark"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Title Input -->
+                        <div class="inspector-title-wrap">
+                            <textarea id="inspectorTitleInput" class="inspector-title-input" rows="2" placeholder="Judul tugas..."></textarea>
+                        </div>
+
+                        <!-- Google Calendar Web Intent Action Card (Option A) -->
+                        <div class="gcal-intent-card">
+                            <div class="gcal-intent-info">
+                                <div class="gcal-intent-icon">
+                                    <i class="fab fa-google"></i>
+                                </div>
+                                <div class="gcal-intent-texts">
+                                    <strong>Google Calendar Sync</strong>
+                                    <span>Buka template intent dengan 1-klik</span>
+                                </div>
+                            </div>
+                            <button type="button" class="btn-gcal-intent-action" id="btnGCalIntentAction">
+                                <span>Tambah ke GCal</span>
+                                <i class="fas fa-arrow-up-right-from-square"></i>
+                            </button>
+                        </div>
+
+                        <!-- Deadline & Category Meta Row -->
+                        <div class="inspector-meta-grid">
+                            <div class="meta-field">
+                                <label for="inspectorDueDate"><i class="fas fa-calendar-day"></i> Tenggat</label>
+                                <input type="date" id="inspectorDueDate">
+                            </div>
+                            <div class="meta-field">
+                                <label for="inspectorDueTime"><i class="fas fa-clock"></i> Jam</label>
+                                <input type="time" id="inspectorDueTime">
+                            </div>
+                            <div class="meta-field full-width">
+                                <label for="inspectorCategorySelect"><i class="fas fa-folder"></i> Kategori</label>
+                                <select id="inspectorCategorySelect">
+                                    <option value="">Tanpa Kategori</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Checklist Subtasks -->
+                        <div class="inspector-subtasks-section">
+                            <div class="subtasks-section-header">
+                                <div class="subtasks-title">
+                                    <i class="fas fa-list-check"></i>
+                                    <span>Langkah & Sub-tugas</span>
+                                </div>
+                                <span class="subtasks-ratio" id="inspectorSubtaskRatio">0/0</span>
+                            </div>
+
+                            <!-- Progress Bar -->
+                            <div class="subtask-progress-track">
+                                <div class="subtask-progress-fill" id="subtaskProgressFill" style="width: 0%;"></div>
+                            </div>
+
+                            <ul class="inspector-subtask-list" id="inspectorSubtaskList"></ul>
+
+                            <!-- Add Step Input -->
+                            <div class="add-subtask-input-wrap">
+                                <i class="fas fa-plus"></i>
+                                <input type="text" id="inspectorNewSubtaskInput" placeholder="Tambah langkah baru... (Enter)" autocomplete="off">
+                            </div>
+                        </div>
+
+                        <!-- Notes Area -->
+                        <div class="inspector-notes-section">
+                            <label for="inspectorNotesTextarea" class="notes-label">
+                                <i class="fas fa-align-left"></i> Catatan Deskripsi
+                            </label>
+                            <textarea id="inspectorNotesTextarea" placeholder="Tulis detail materi, catatan praktikum, referensi, atau instruksi..." rows="4"></textarea>
+                        </div>
+
+                        <!-- Inspector Footer -->
+                        <div class="inspector-footer">
+                            <span class="inspector-created-info" id="inspectorCreatedInfo">Dibuat 11 Okt 2026</span>
+                            <button type="button" class="btn-delete-task" id="btnInspectorDelete">
+                                <i class="fas fa-trash-can"></i> Hapus
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
     </div>
 
-    <div id="deleteModal" class="modal-overlay">
-        <div class="modal-box">
-            <h3>Konfirmasi</h3>
-            <p>Apakah kamu yakin ingin menghapus tugas?</p>
+    <!-- ================= CATEGORY CREATION MODAL ================= -->
+    <div class="modal-overlay" id="categoryModal" role="dialog" aria-modal="true">
+        <div class="modal-card">
+            <div class="modal-header">
+                <i class="fas fa-folder-plus modal-header-icon"></i>
+                <h3>Tambah Kategori Baru</h3>
+            </div>
+            <p class="modal-desc">Kategori membantu mengelompokkan tugas berdasarkan mata kuliah atau proyek.</p>
+            <div class="modal-field">
+                <label for="modalCategoryInput">Nama Kategori</label>
+                <input type="text" id="modalCategoryInput" placeholder="Contoh: Pemrograman Web, Mobile App..." autocomplete="off">
+            </div>
             <div class="modal-buttons">
-                <button id="cancelBtn" class="btn-cancel">Batal</button>
-                <button id="confirmBtn" class="btn-confirm">Hapus</button>
+                <button type="button" class="btn-modal-cancel" id="catModalCancel">Batal</button>
+                <button type="button" class="btn-modal-primary" id="catModalConfirm">Simpan Kategori</button>
             </div>
         </div>
     </div>
 
-    <div class="footer"> © 2025 • To-Do List • Agoes</div>
+    <!-- ================= CONFIRM DELETE MODAL ================= -->
+    <div class="modal-overlay" id="deleteModal" role="dialog" aria-modal="true">
+        <div class="modal-card">
+            <div class="modal-header">
+                <i class="fas fa-triangle-exclamation modal-header-icon danger"></i>
+                <h3>Hapus Agenda?</h3>
+            </div>
+            <p class="modal-desc">Agenda ini dan seluruh daftar sub-tugasnya akan dihapus permanen dari memori browser.</p>
+            <div class="modal-buttons">
+                <button type="button" class="btn-modal-cancel" id="deleteModalCancel">Batal</button>
+                <button type="button" class="btn-modal-danger" id="deleteModalConfirm">Ya, Hapus</button>
+            </div>
+        </div>
+    </div>
 
+    <!-- Main Logic Script -->
     <script src="script.js"></script>
 </body>
 </html>
